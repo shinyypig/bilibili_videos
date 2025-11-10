@@ -1,9 +1,40 @@
 from manim import *
+from utils import *
+
+
+class WelcomeScene(Scene):
+    def construct(self):
+
+        title = Text("卷积的矩阵表示", font_size=80, color=WHITE)
+        title.move_to(ORIGIN)
+
+        logo_cn = VerticalText("矩阵之美", font_size=32, color=WHITE)
+        logo = Logo()
+        title_group = VGroup(logo_cn, logo)
+
+        logo.next_to(logo_cn, RIGHT, aligned_edge=DOWN)
+        title_group.to_edge(DR, buff=0.5)
+
+        self.play(
+            Write(title),
+            run_time=2,
+        )
+        self.play(
+            FadeIn(title_group, shift=UP),
+            run_time=2,
+        )
+        self.play(
+            FadeOut(logo_cn),
+            FadeOut(title),
+            shift=UP,
+            run_time=2,
+        )
+        self.wait(2)
 
 
 class ContinuousConvolution(Scene):
     def construct(self):
-        # Define the functions f(t) and g(t)
+        ##  Define the functions f(t) and g(t)
         f = lambda t: np.exp(-t) * (t >= 0)
         g = lambda t: np.heaviside(t, 0.5) - np.heaviside(t - 1, 0.5)
 
