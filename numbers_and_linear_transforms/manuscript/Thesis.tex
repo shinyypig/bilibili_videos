@@ -1,0 +1,95 @@
+\documentclass[cn]{simplepaper}
+
+\begin{document}
+\title{数理同契}
+\author{朱亮亮}
+\date{\today}
+\maketitle
+
+\section{引言}
+
+在线性代数中，我们学过，一个方阵对应了一个线性变换，并且这个线性变换可以将线性空间中的一个向量变换为该线性空间中另一个向量。
+
+以二维平面为例，给定矩阵：
+\[
+    \begin{bmatrix}
+        2 & 0    \\
+        0 & 0.5
+    \end{bmatrix}
+\]
+我们可以轻松地判断出该矩阵对应了\textbf{缩放}这一线性变换，即在水平方向上缩放2倍，而在垂直方向上缩放0.5倍。而对于这个矩阵：
+\[
+    \begin{bmatrix}
+        1 & 0   \\
+        0 & -1
+    \end{bmatrix}
+\]
+它对应了一个关于 \( x \) 轴的\textbf{反射}变换。将该矩阵稍作修改：
+\[
+    \begin{bmatrix}
+        1 & 0   \\
+        0 & -2
+    \end{bmatrix}
+\]
+此时，该矩阵则不仅仅包含了反射变换，还包含了一个缩放变换。再次，如果将\( -2 \)改为\( 0 \)，则矩阵
+\[
+    \begin{bmatrix}
+        1 & 0  \\
+        0 & 0
+    \end{bmatrix}
+\]
+则对应了\textbf{投影}变换。它将所有的向量投影到 \( x \) 轴上。
+
+至于如下的矩阵：
+\[
+    \begin{bmatrix}
+        \cos \theta & -\sin \theta \\
+        \sin \theta & \cos \theta
+    \end{bmatrix}
+\]
+同学们想必就更加熟悉了，它对应了一个\textbf{旋转}变换，对应的旋转角度为 \( \theta \)。与此同时，当 \( \theta = \pi \) 时，矩阵为
+\[
+    \begin{bmatrix}
+        -1 & 0   \\
+        0  & -1
+    \end{bmatrix}
+\]
+这表明，该矩阵对应了一个旋转角度为 \( \pi \) 的旋转变换。与此同时，我们注意到该矩阵可以被分解为两个矩阵的乘积：
+\[
+    \begin{bmatrix}
+        -1 & 0   \\
+        0  & -1
+    \end{bmatrix} = \begin{bmatrix}
+        1 & 0   \\
+        0 & -1
+    \end{bmatrix}
+    \begin{bmatrix}
+        -1 & 0  \\
+        0  & 1
+    \end{bmatrix}
+\]
+这意味着，该矩阵实际上也对应了两个反射变换的组合。最后，我们来看下面这个矩阵：
+\[
+    \begin{bmatrix}
+        1 & 1  \\
+        0 & 1
+    \end{bmatrix}
+\]
+该矩阵对应了一个\textbf{剪切}变换。那么到目前为止，我们介绍了五种最常见的线性变换：缩放、反射、投影、旋转和剪切，并且给出了它们对应的矩阵的典型形式。
+
+在此基础上，我们不禁思考两个问题：第一个问题，给定一个任意的矩阵，我们该如何判断它对应的线性变换是什么？第二个问题，除了上述五种变换，还有没有其他的线性变换？
+
+\section{矩阵相似}
+
+我们首先来解决第一个问题。比如给定一个如下的矩阵
+\[
+    \begin{bmatrix}
+        2 & 1  \\
+        1 & 3
+    \end{bmatrix}
+\]
+因为它不是对角矩阵，所以我们并不能直接从它的对角线元素来判断它对应何种线性变换。但这不妨碍我们观察一下，对于一个任意的向量，该矩阵将如何变换它。
+
+\printbibliography[heading=simplepaper]
+
+\end{document}
