@@ -1,5 +1,5 @@
 # pixi environments
-.pixi
+.venv/
 .DS_Store
 media/
 __pycache__/

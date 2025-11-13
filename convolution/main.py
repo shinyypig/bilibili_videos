@@ -1,10 +1,19 @@
+# import necessary libraries
 from manim import *
+import os
+import sys
+import numpy as np
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
 from utils import *
 
 
+# Scene 1: Welcome Scene
 class WelcomeScene(Scene):
     def construct(self):
-
+        ## Show the welcome title and logo
         title = Text("卷积的矩阵表示", font_size=80, color=WHITE)
         title.move_to(ORIGIN)
 
