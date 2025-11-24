@@ -43,6 +43,8 @@ class WelcomeScene(Scene):
 
 class ContinuousConvolution(Scene):
     def construct(self):
+        logo = Logo()
+        self.add(logo)
         ## Show continuous convolution definition
         title = Text("连续函数的卷积：", font_size=26, color=WHITE)
 
@@ -174,6 +176,8 @@ class DiscreteConvolution(Scene):
         return result
 
     def construct(self):
+        logo = Logo()
+        self.add(logo)
         ## Show discrete convolution definition
         title = Text("离散序列的卷积：", font_size=26, color=WHITE)
         formula = MathTex(
@@ -286,6 +290,8 @@ class DiscreteConvolution(Scene):
 
 class MatrixFormConvolution(Scene):
     def construct(self):
+        logo = Logo()
+        self.add(logo)
         conv_tex = MathTex(
             r"[1\ 2\ 3\ 4\ 1] * [1\ 2\ 3] = [1 \ 4 \ 10 \ 16 \ 18 \ 14 \ 3]",
             font_size=36,
@@ -429,6 +435,8 @@ class MatrixFormConvolution(Scene):
 
 class MatrixFormConvolution2(Scene):
     def construct(self):
+        logo = Logo()
+        self.add(logo)
         conv_tex = MathTex(
             r"\boldsymbol{y} = \boldsymbol{x} * \boldsymbol{h} = \mathbf{H}\boldsymbol{x}",
         )
@@ -488,6 +496,8 @@ class MatrixFormConvolution2(Scene):
 
 class MatrixFormConvolution3(Scene):
     def construct(self):
+        logo = Logo()
+        self.add(logo)
         conv_tex = MathTex(
             r"\boldsymbol{y} = \boldsymbol{h} * \boldsymbol{x} = \mathbf{X}\boldsymbol{h}",
         )
@@ -547,6 +557,8 @@ class MatrixFormConvolution3(Scene):
 
 class MatrixFormConvolution4(Scene):
     def construct(self):
+        logo = Logo()
+        self.add(logo)
         conv_tex = MathTex(
             r"[1\ 2\ 3\ 4\ 1] * [1\ 2\ 3] = [1 \ 4 \ 10 \ 16 \ 18 \ 14 \ 3]",
             font_size=36,
