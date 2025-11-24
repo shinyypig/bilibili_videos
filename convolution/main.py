@@ -505,7 +505,7 @@ class MatrixFormConvolution3(Scene):
         self.play(Write(conv_tex), run_time=2)
 
         text = Text(
-            "卷积可交换，也能把数据 \\boldsymbol{x} 展成 Toeplitz 矩阵",
+            "卷积可交换，也能把数据展成 Toeplitz 矩阵",
             font_size=32,
         ).next_to(conv_tex, DOWN, buff=0.5)
 
@@ -529,29 +529,6 @@ class MatrixFormConvolution3(Scene):
         ).next_to(text, DOWN, buff=0.5)
 
         self.play(Write(X_tex), run_time=4)
-        self.wait(2)
-
-        self.play(X_tex.animate.to_edge(LEFT, buff=0.5), run_time=1)
-        self.wait(1)
-
-        tex1 = MathTex(
-            r"\boldsymbol{y}_1 = \mathbf{X}\boldsymbol{h}_1 \quad \boldsymbol{y}_2 = \mathbf{X}\boldsymbol{h}_2",
-            font_size=36,
-        )
-        tex2 = MathTex(
-            r"\alpha \boldsymbol{y}_1 + \beta \boldsymbol{y}_2 = \mathbf{X}(\alpha \boldsymbol{h}_1 + \beta \boldsymbol{h}_2)",
-            font_size=36,
-        )
-        vgroup = VGroup(tex1, tex2).arrange(DOWN, buff=0.7).to_edge(RIGHT, buff=2)
-        self.play(FadeIn(vgroup), run_time=2)
-        self.wait(2)
-
-        text = Text(
-            "交换卷积次序，只是把矩阵由卷积核换成了输入数据",
-            font_size=32,
-        ).next_to(vgroup, DOWN, buff=1)
-
-        self.play(Write(text), run_time=2)
         self.wait(2)
 
 
