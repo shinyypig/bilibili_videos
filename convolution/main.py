@@ -486,7 +486,7 @@ class MatrixFormConvolution2(Scene):
         self.wait(2)
 
         text = Text(
-            "FIR 滤波器是线性时不变系统",
+            "卷积是线性运算",
             font_size=32,
         ).next_to(vgroup, DOWN, buff=1)
 
