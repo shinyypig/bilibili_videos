@@ -640,6 +640,7 @@ class IntroToGroups(Scene):
         self.wait(2)
 
 
+#
 class ExampleofGroups(Scene):
     def construct(self):
         logo = Logo()
@@ -647,3 +648,40 @@ class ExampleofGroups(Scene):
 
         title = Text("群论入门", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
         self.play(Write(title))
+
+        # 展示Dn群
+        txt1 = Text("二面体群：", font_size=32)
+        tex1 = MathTex(
+            r"\{D_n, \circ\}, \quad D_n = \{ R_k, F_k | k=0,1,...,n-1 \}", font_size=36
+        )
+        txt1.next_to(title, DOWN, buff=0.5)
+        tex1.next_to(txt1, RIGHT, buff=0.2)
+        self.play(Write(txt1), Write(tex1), run_time=3)
+
+        # 整数加法群
+        txt2 = Text("整数加法群：", font_size=32)
+        tex2 = MathTex(r"\{\mathbb{Z}, +\}", font_size=36)
+        txt2.next_to(txt1, DOWN, buff=0.5, aligned_edge=LEFT)
+        tex2.next_to(txt2, RIGHT, buff=0.2)
+        self.play(Write(txt2), Write(tex2), run_time=3)
+
+        # 非零有理数乘法群
+        txt3 = Text("非零有理数乘法群：", font_size=32)
+        tex3 = MathTex(r"\{\mathbb{Q} \setminus \{0\}, \times\}", font_size=36)
+        txt3.next_to(txt2, DOWN, buff=0.5, aligned_edge=LEFT)
+        tex3.next_to(txt3, RIGHT, buff=0.2)
+        self.play(Write(txt3), Write(tex3), run_time=3)
+
+        # 一般线性群
+        txt4 = Text("一般线性群：", font_size=32)
+        tex4 = MathTex(r"\{GL(n, \mathbb{R}), \circ\}", font_size=36)
+        txt4.next_to(txt3, DOWN, buff=0.5, aligned_edge=LEFT)
+        tex4.next_to(txt4, RIGHT, buff=0.2)
+        self.play(Write(txt4), Write(tex4), run_time=3)
+
+        # 置换群
+        txt5 = Text("置换群：", font_size=32)
+        tex5 = MathTex(r"\{S_n, \circ\}", font_size=36)
+        txt5.next_to(txt4, DOWN, buff=0.5, aligned_edge=LEFT)
+        tex5.next_to(txt5, RIGHT, buff=0.2)
+        self.play(Write(txt5), Write(tex5), run_time=3)
