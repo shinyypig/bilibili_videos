@@ -437,35 +437,29 @@ class IntroToGroups(Scene):
         self.play(Write(title))
 
         # 给出群的定义（放在页面左侧）
-        ctex = TexTemplateLibrary.ctex
-        group_def = MathTex(
-            r"\text{群 } (G, \circ) \text{ 是一个集合 } G \text{ 和一个二元运算 } \circ \text{ 的组合，满足：}",
+        group_def = Text(
+            "群 (G, o) 是一个集合 G 和一个二元运算 o 的组合，满足：",
             font_size=32,
-            tex_template=ctex,
         )
         group_def.to_edge(LEFT, buff=0.5).to_edge(UP, buff=1.5)
         self.play(Write(group_def), run_time=3)
         # 群的四条公理
         axioms = VGroup(
-            MathTex(
-                r"1.\ \text{封闭性：} \forall a, b \in G, a \circ b \in G",
+            Text(
+                "1. 封闭性：任意 a, b 在 G 中，a o b 仍在 G 中",
                 font_size=32,
-                tex_template=ctex,
             ),
-            MathTex(
-                r"2.\ \text{结合性：} \forall a, b, c \in G, (a \circ b) \circ c = a \circ (b \circ c)",
+            Text(
+                "2. 结合性：(a o b) o c = a o (b o c)",
                 font_size=32,
-                tex_template=ctex,
             ),
-            MathTex(
-                r"3.\ \text{单位元：} \exists e \in G, \forall a \in G, e \circ a = a \circ e = a",
+            Text(
+                "3. 单位元：存在 e，使得 e o a = a o e = a",
                 font_size=32,
-                tex_template=ctex,
             ),
-            MathTex(
-                r"4.\ \text{逆元：} \forall a \in G, \exists b \in G, a \circ b = b \circ a = e",
+            Text(
+                "4. 逆元：每个 a 都有 b，使得 a o b = b o a = e",
                 font_size=32,
-                tex_template=ctex,
             ),
         )
         for i, axiom in enumerate(axioms):
@@ -482,15 +476,11 @@ class IntroToGroups(Scene):
         )
 
         # 展示D4群
-        square = Square(side_length=2, stroke_width=3)
-        square.set_fill(BLUE_E, opacity=0.5)
+        square = SquareWithDots(side_length=2, dot_radius=0.06)
         square.to_edge(LEFT, buff=1)
         self.play(Create(square), run_time=2)
 
-        square_move = square.copy()
-        # square_move.next_to(square, DOWN, buff=1.5)
-        # self.play(Create(square_move), run_time=2)
-        self.add(square_move)
+        square_move = square
 
         txt1 = Text("反射", font_size=36)
         txt1.next_to(title, DOWN + RIGHT * 3, buff=0.5)
@@ -612,25 +602,21 @@ class IntroToGroups(Scene):
         self.wait(2)
 
         axioms = VGroup(
-            MathTex(
-                r"1.\ \text{封闭性：} \forall a, b \in G, a \circ b \in G",
+            Text(
+                "1. 封闭性",
                 font_size=32,
-                tex_template=ctex,
             ),
-            MathTex(
-                r"2.\ \text{结合性：} \forall a, b, c \in G, (a \circ b) \circ c = a \circ (b \circ c)",
+            Text(
+                "2. 结合性",
                 font_size=32,
-                tex_template=ctex,
             ),
-            MathTex(
-                r"3.\ \text{单位元：} \exists e \in G, \forall a \in G, e \circ a = a \circ e = a",
+            Text(
+                "3. 单位元",
                 font_size=32,
-                tex_template=ctex,
             ),
-            MathTex(
-                r"4.\ \text{逆元：} \forall a \in G, \exists b \in G, a \circ b = b \circ a = e",
+            Text(
+                "4. 逆元",
                 font_size=32,
-                tex_template=ctex,
             ),
         )
         for i, axiom in enumerate(axioms):
@@ -647,7 +633,7 @@ class ExampleofGroups(Scene):
         self.add(logo.to_edge(DR, buff=0.5))
 
         title = Text("群论入门", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
-        self.play(Write(title))
+        self.add(title)
 
         # 展示Dn群
         txt1 = Text("二面体群：", font_size=32)
@@ -685,3 +671,337 @@ class ExampleofGroups(Scene):
         txt5.next_to(txt4, DOWN, buff=0.5, aligned_edge=LEFT)
         tex5.next_to(txt5, RIGHT, buff=0.2)
         self.play(Write(txt5), Write(tex5), run_time=3)
+
+        # 性质
+        axioms = VGroup(
+            Text("封闭性", font_size=32),
+            Text("结合性", font_size=32),
+            Text("单位元", font_size=32),
+            Text("逆元", font_size=32),
+        )
+        for i, axiom in enumerate(axioms):
+            axiom.next_to(
+                title,
+                DOWN * 4 + RIGHT * 12 + DOWN * i * 1.2,
+                buff=0.5,
+                aligned_edge=LEFT,
+            )
+            self.play(Write(axiom), run_time=2)
+            self.wait(1)
+
+
+class Subgroup(Scene):
+    def construct(self):
+        logo = Logo()
+        self.add(logo.to_edge(DR, buff=0.5))
+
+        title = Text("子群", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
+        self.add(title)
+
+        right_x = 2.25
+
+        intro = VGroup(
+            MathTex(r"H \leq G", font_size=56),
+            Text(
+                "如果 H 是 G 的一部分，并且 H 自己也是一个群，",
+                font_size=32,
+            ),
+            Text(
+                "那么 H 就叫做 G 的子群。",
+                font_size=32,
+            ),
+        ).arrange(DOWN, buff=0.35, aligned_edge=LEFT)
+        intro.to_edge(LEFT, buff=0.7).shift(UP * 0.8)
+
+        self.play(Write(intro[0]), run_time=1.2)
+        self.play(Write(intro[1]), Write(intro[2]), run_time=2.5)
+        self.wait(1)
+
+        shortcut = VGroup(
+            Text(
+                "判断子群，只需要检查：",
+                font_size=32,
+            ),
+            MathTex(r"1.\ e \in H", font_size=32),
+            MathTex(
+                r"2.\ a,b \in H \Rightarrow a\circ b^{-1}\in H",
+                font_size=32,
+            ),
+        ).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
+        shortcut.next_to(intro, DOWN, buff=0.6, aligned_edge=LEFT)
+
+        self.play(Write(shortcut), run_time=3)
+        self.wait(1.5)
+
+        self.play(
+            FadeOut(intro),
+            FadeOut(shortcut),
+            shift=UP,
+            run_time=1.5,
+        )
+
+        # 用 D4 里的旋转来展示第一个子群。
+        square = SquareWithDots(side_length=1.85, dot_radius=0.055)
+        square.move_to(LEFT * 3.8 + DOWN * 0.35)
+        square_label = MathTex(r"D_4", font_size=42)
+        square_label.next_to(square, UP, buff=0.4)
+
+        self.play(Create(square), Write(square_label), run_time=1.5)
+
+        rot_title = Text("只取旋转", font_size=32)
+        H_rot = MathTex(
+            r"H=\{I,R_{\frac{\pi}{2}},R_{\pi},R_{\frac{3\pi}{2}}\}",
+            font_size=34,
+        )
+        labels = VGroup(
+            MathTex(r"I", font_size=34),
+            MathTex(r"R_{\frac{\pi}{2}}", font_size=34),
+            MathTex(r"R_{\pi}", font_size=34),
+            MathTex(r"R_{\frac{3\pi}{2}}", font_size=34),
+        ).arrange(RIGHT, buff=0.45)
+        closed = MathTex(
+            r"R_a\circ R_b=R_{a+b}\in H",
+            font_size=36,
+        )
+        conclusion = MathTex(r"H \leq D_4", font_size=44, color=c2)
+        rot_panel = VGroup(rot_title, H_rot, labels, closed, conclusion).arrange(
+            DOWN, buff=0.35, aligned_edge=LEFT
+        )
+        rot_panel.move_to(RIGHT * right_x + UP * 0.25)
+
+        self.play(Write(rot_title), Write(H_rot), run_time=2)
+
+        rotations = [
+            (r"I", 0),
+            (r"R_{\frac{\pi}{2}}", PI / 2),
+            (r"R_{\pi}", PI),
+            (r"R_{\frac{3\pi}{2}}", 3 * PI / 2),
+        ]
+        current_square = square
+        for label, (_, angle) in zip(labels, rotations):
+            if angle == 0:
+                self.play(Write(label), run_time=0.7)
+            else:
+                self.play(
+                    Rotate(
+                        current_square,
+                        angle=angle,
+                        about_point=current_square.get_center(),
+                    ),
+                    Write(label),
+                    run_time=1.2,
+                )
+            self.wait(0.2)
+        self.play(Write(closed), run_time=1.8)
+
+        self.play(Write(conclusion), run_time=1.2)
+        self.wait(1.5)
+
+        self.play(
+            FadeOut(rot_title),
+            FadeOut(H_rot),
+            FadeOut(labels),
+            FadeOut(closed),
+            FadeOut(conclusion),
+            run_time=1.2,
+        )
+
+        # 一个由单个反射生成的子群。
+        reflect_title = Text("一次反射生成的子群", font_size=32)
+        K_ref = MathTex(r"K=\{I,F_0\}", font_size=38)
+        ref_rule = MathTex(r"F_0\circ F_0=I", font_size=38)
+        K_conclusion = MathTex(r"K \leq D_4", font_size=44, color=c2)
+        reflect_panel = VGroup(reflect_title, K_ref, ref_rule, K_conclusion).arrange(
+            DOWN, buff=0.4, aligned_edge=LEFT
+        )
+        reflect_panel.move_to(RIGHT * right_x + UP * 0.25)
+
+        self.play(Write(reflect_title), Write(K_ref), run_time=1.8)
+
+        reflect_axis = DashedLine(
+            start=current_square.get_top(),
+            end=current_square.get_bottom(),
+            color=c2,
+            dash_length=0.18,
+        )
+        self.play(Create(reflect_axis), run_time=0.7)
+
+        reflected_square = current_square.copy()
+        reflected_square.flip(axis=reflect_axis.get_start() - reflect_axis.get_end())
+        self.play(Transform(current_square, reflected_square), run_time=1.0)
+
+        back_square = current_square.copy()
+        back_square.flip(axis=reflect_axis.get_start() - reflect_axis.get_end())
+        self.play(Transform(current_square, back_square), Write(ref_rule), run_time=1.3)
+
+        self.play(Write(K_conclusion), run_time=1.1)
+        self.wait(1.2)
+
+        self.play(
+            FadeOut(reflect_axis),
+            FadeOut(reflect_title),
+            FadeOut(K_ref),
+            FadeOut(ref_rule),
+            FadeOut(K_conclusion),
+            run_time=1.2,
+        )
+
+        # 不是任意子集都能成为子群：缺少封闭性。
+        bad_title = Text("但不是所有子集都是子群", font_size=32)
+        bad_set = MathTex(
+            r"A=\{I,R_{\frac{\pi}{2}},F_0\}",
+            font_size=38,
+        )
+        bad_product = MathTex(
+            r"R_{\frac{\pi}{2}}\circ F_0=F_{\frac{\pi}{4}}\notin A",
+            font_size=38,
+        )
+        bad_conclusion = MathTex(r"A \nleq D_4", font_size=44, color=c5)
+        bad_panel = VGroup(bad_title, bad_set, bad_product, bad_conclusion).arrange(
+            DOWN, buff=0.4, aligned_edge=LEFT
+        )
+        bad_panel.move_to(RIGHT * right_x + UP * 0.25)
+
+        self.play(Write(bad_title), Write(bad_set), run_time=1.8)
+        self.play(Write(bad_product), run_time=2.0)
+        self.play(Write(bad_conclusion), run_time=1.1)
+        self.wait(2)
+
+        self.wait(2)
+
+
+class SubgroupPartitionTheorem(Scene):
+    def construct(self):
+        logo = Logo()
+        self.add(logo.to_edge(DR, buff=0.5))
+
+        title = Text("子群分割定理", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
+        self.add(title)
+
+        subtitle = Text("用子群去“平移”，会把整个群分成不重叠的小块", font_size=30)
+        subtitle.next_to(title, DOWN, buff=0.35, aligned_edge=LEFT)
+        self.play(Write(subtitle), run_time=2)
+
+        elems = [
+            r"I",
+            r"R_{\pi}",
+            r"R_{\frac{\pi}{2}}",
+            r"R_{\frac{3\pi}{2}}",
+            r"F_0",
+            r"F_{\frac{\pi}{2}}",
+            r"F_{\frac{\pi}{4}}",
+            r"F_{\frac{3\pi}{4}}",
+        ]
+
+        def element_card(tex, fill_color=BLUE_E):
+            box = RoundedRectangle(
+                width=1.55,
+                height=0.72,
+                corner_radius=0.08,
+                stroke_width=2,
+                stroke_color=WHITE,
+                fill_color=fill_color,
+                fill_opacity=0.35,
+            )
+            label = MathTex(tex, font_size=30)
+            label.move_to(box)
+            return VGroup(box, label)
+
+        cards = VGroup(*[element_card(tex) for tex in elems]).arrange(RIGHT, buff=0.14)
+        cards.scale(0.72)
+        cards.move_to(UP * 0.9)
+
+        G_label = MathTex(r"D_4", font_size=38)
+        G_label.next_to(cards, LEFT, buff=0.25)
+
+        self.play(
+            Write(G_label),
+            LaggedStart(*[FadeIn(card) for card in cards], lag_ratio=0.08),
+            run_time=2,
+        )
+        self.wait(0.5)
+
+        H_title = Text("先取一个最简单的子群", font_size=32)
+        H_tex = MathTex(r"H=\{I,R_{\pi}\}", font_size=42)
+        H_group = VGroup(H_title, H_tex).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
+        H_group.move_to(LEFT * 3.6 + DOWN * 1.1)
+
+        coset_box_buff = 0.04
+        H_box = SurroundingRectangle(
+            VGroup(cards[0][0], cards[1][0]),
+            color=c2,
+            buff=coset_box_buff,
+            corner_radius=0.08,
+            stroke_width=4,
+        )
+        self.play(Write(H_group), Create(H_box), run_time=1.8)
+        self.wait(1)
+
+        coset_def = MathTex(
+            r"gH=\{g\circ h\mid h\in H\}",
+            font_size=40,
+        )
+        coset_def.move_to(RIGHT * 2.15 + DOWN * 1.1)
+        self.play(Write(coset_def), run_time=1.8)
+        self.wait(0.8)
+
+        self.play(FadeOut(H_box), run_time=0.6)
+
+        cosets = [
+            (r"IH", [0, 1], c2),
+            (r"R_{\frac{\pi}{2}}H", [2, 3], c3),
+            (r"F_0H", [4, 5], c4),
+            (r"F_{\frac{\pi}{4}}H", [6, 7], c5),
+        ]
+
+        coset_boxes = VGroup()
+        coset_labels = VGroup()
+        for name, indices, color in cosets:
+            box = SurroundingRectangle(
+                VGroup(*[cards[i][0] for i in indices]),
+                color=color,
+                buff=coset_box_buff,
+                corner_radius=0.08,
+                stroke_width=4,
+            )
+            label = MathTex(name, font_size=31, color=color)
+            label.next_to(box, DOWN, buff=0.16)
+            coset_boxes.add(box)
+            coset_labels.add(label)
+
+        for box, label in zip(coset_boxes, coset_labels):
+            self.play(Create(box), Write(label), run_time=1.0)
+            self.wait(0.3)
+
+        self.play(
+            FadeOut(H_group),
+            FadeOut(coset_def),
+            run_time=0.6,
+        )
+
+        notes = VGroup(
+            Text("每块 2 个元素", font_size=24),
+            Text("互不重叠", font_size=24),
+            Text("刚好覆盖整个 D4", font_size=24),
+        ).arrange(RIGHT, buff=0.62)
+        notes.next_to(coset_labels, DOWN, buff=0.55)
+        notes.shift(LEFT * 0.15)
+
+        self.play(Write(notes[0]), run_time=1.2)
+        self.play(Write(notes[1]), run_time=1.2)
+        self.play(Write(notes[2]), run_time=1.2)
+        self.wait(1.2)
+
+        theorem = Text(
+            "子群的元素个数，能够整除整个群的元素个数",
+            font_size=31,
+            color=c2,
+        )
+        theorem.move_to(DOWN * 1.55)
+
+        self.play(
+            FadeOut(notes),
+            run_time=0.8,
+        )
+        self.play(Write(theorem), run_time=1.8)
+        self.wait(2)
