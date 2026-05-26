@@ -1060,3 +1060,207 @@ class ReflectionContradiction(Scene):
         self.play(Write(contradiction[2]), run_time=0.8)
         self.play(Write(contradiction[3]), run_time=1.4)
         self.wait(2)
+
+
+class StructureSummary(Scene):
+    def construct(self):
+        logo = Logo()
+        self.add(logo.to_edge(DR, buff=0.5))
+
+        title = Text("真正重要的是什么？", font_size=48, color=WHITE).to_edge(
+            UL, buff=0.5
+        )
+        self.add(title)
+
+        opening = Text("不是为了把简单问题复杂化", font_size=32)
+        opening.move_to(UP * 1.55)
+        self.play(Write(opening), run_time=1.6)
+        self.wait(0.8)
+
+        signal_title = Text("比如：长度为 8 的离散周期信号", font_size=28)
+        signal_title.move_to(UP * 1.72)
+
+        values = [1, 3, 2, 5, 4, 2, 1, 4]
+        shifted_values = values[-2:] + values[:-2]
+        flipped_values = list(reversed(values))
+
+        plot_origin_x = 0.15
+        sample_spacing = 0.72
+        x_positions = [
+            plot_origin_x - sample_spacing * 3.5 + i * sample_spacing
+            for i in range(len(values))
+        ]
+        axis_left = x_positions[0] - 0.25
+        axis_right = x_positions[-1] + 0.25
+
+        def signal_base(y):
+            axis = Line(
+                [axis_left, y, 0],
+                [axis_right, y, 0],
+                color=GREY_B,
+                stroke_width=2,
+            )
+            ticks = VGroup()
+            for x in x_positions:
+                ticks.add(
+                    Line(
+                        [x, y - 0.04, 0],
+                        [x, y + 0.04, 0],
+                        color=GREY_B,
+                        stroke_width=1.4,
+                    )
+                )
+            return VGroup(axis, ticks)
+
+        def signal_bars_and_dots(row_values, color, y):
+            bars = VGroup()
+            dots = VGroup()
+            for i, value in enumerate(row_values):
+                x = x_positions[i]
+                top = np.array([x, y + 0.12 + value * 0.1, 0])
+                bars.add(Line([x, y, 0], top, color=color, stroke_width=3))
+                dots.add(Dot(top, radius=0.045, color=color))
+            return VGroup(bars, dots)
+
+        def signal_plot(row_values, color, y):
+            base = signal_base(y)
+            marks = signal_bars_and_dots(row_values, color, y)
+            return VGroup(base[0], base[1], marks[0], marks[1])
+
+        def signal_row(label, row_values, color, y):
+            label_mob = Text(label, font_size=24, color=color)
+            label_mob.move_to(np.array([axis_left - 0.95, y + 0.2, 0]))
+            plot = signal_plot(row_values, color, y)
+            return VGroup(label_mob, plot)
+
+        original_y = 0.5
+        shift_y = -0.42
+        flip_y = -1.34
+
+        original_row = signal_row("原信号", values, WHITE, original_y)
+
+        shift_dest = [(i + 2) % len(values) for i in range(len(values))]
+        flip_dest = [len(values) - 1 - i for i in range(len(values))]
+
+        def animate_signal_operation(
+            label_text, target_values, color, target_y, destinations
+        ):
+            label_mob = Text(label_text, font_size=24, color=color)
+            label_mob.move_to(np.array([axis_left - 0.95, target_y + 0.2, 0]))
+            target_base = signal_base(target_y)
+            movers = signal_bars_and_dots(values, color, original_y)
+            target_marks = signal_bars_and_dots(target_values, color, target_y)
+
+            self.play(
+                FadeIn(label_mob, shift=RIGHT * 0.12),
+                Create(target_base[0]),
+                Create(target_base[1]),
+                run_time=0.8,
+            )
+            self.add(movers)
+            self.play(
+                LaggedStart(
+                    *[
+                        AnimationGroup(
+                            Transform(
+                                movers[0][source_index],
+                                target_marks[0][dest_index],
+                            ),
+                            Transform(
+                                movers[1][source_index],
+                                target_marks[1][dest_index],
+                            ),
+                        )
+                        for source_index, dest_index in enumerate(destinations)
+                    ],
+                    lag_ratio=0.08,
+                ),
+                run_time=3.2,
+            )
+            self.wait(0.5)
+            return VGroup(label_mob, target_base[0], target_base[1], movers)
+
+        self.play(FadeOut(opening), run_time=0.5)
+        self.play(FadeIn(signal_title, shift=UP * 0.12), run_time=0.9)
+        self.play(Create(original_row), run_time=1.2)
+
+        shift_result = animate_signal_operation(
+            "右移 2 位", shifted_values, c3, shift_y, shift_dest
+        )
+        flip_result = animate_signal_operation(
+            "左右翻转", flipped_values, c5, flip_y, flip_dest
+        )
+        self.wait(0.8)
+
+        structure = Text("关键是这些操作之间的组合规律", font_size=28, color=GREY_A)
+        structure.move_to(DOWN * 2.0)
+
+        self.play(FadeIn(structure, shift=UP * 0.12), run_time=0.8)
+        self.wait(0.9)
+
+        iso = VGroup(
+            Text("这套平移/翻转操作的结构就是", font_size=30),
+            MathTex(r"D_8", font_size=48, color=c2),
+        ).arrange(RIGHT, buff=0.2)
+        iso.move_to(DOWN * 0.1)
+
+        self.play(
+            FadeOut(signal_title),
+            FadeOut(original_row),
+            FadeOut(shift_result),
+            FadeOut(flip_result),
+            FadeOut(structure),
+            run_time=0.7,
+        )
+        self.play(FadeIn(iso, shift=UP * 0.15), run_time=0.8)
+        self.wait(0.8)
+
+        core = VGroup(
+            Text("群的结构", font_size=44, color=c2),
+            Text("决定元素之间的关系", font_size=34),
+        ).arrange(DOWN, buff=0.25)
+        core.move_to(UP * 0.55)
+
+        self.play(
+            FadeOut(iso),
+            run_time=0.7,
+        )
+        self.play(FadeIn(core[0], shift=UP * 0.12), run_time=0.7)
+        self.play(FadeIn(core[1], shift=UP * 0.12), run_time=0.7)
+        self.wait(0.8)
+
+        left = VGroup(
+            MathTex(r"D_n", font_size=44, color=c3),
+            Text("旋转与反射", font_size=25),
+            Text("两次反射 = 旋转", font_size=25),
+        ).arrange(DOWN, buff=0.18)
+        right = VGroup(
+            Text("同样的群结构", font_size=29, color=c4),
+            Text("就有同样的结论", font_size=25),
+            MathTex(r"\cong D_n", font_size=32),
+        ).arrange(DOWN, buff=0.18)
+
+        arrow = Arrow(
+            start=LEFT * 1.0,
+            end=RIGHT * 1.0,
+            buff=0.15,
+            color=WHITE,
+            stroke_width=4,
+            max_tip_length_to_length_ratio=0.18,
+        )
+        examples = VGroup(left, arrow, right).arrange(RIGHT, buff=0.75)
+        examples.move_to(DOWN * 1.0)
+
+        self.play(FadeIn(left, shift=RIGHT * 0.12), run_time=0.8)
+        self.play(GrowArrow(arrow), run_time=0.8)
+        self.play(FadeIn(right, shift=LEFT * 0.12), run_time=0.8)
+        self.wait(1.0)
+
+        final = Text(
+            "抽象的价值，是让结论脱离具体图形",
+            font_size=32,
+            color=c2,
+        )
+        final.move_to(DOWN * 2.65)
+        self.play(FadeIn(final, shift=UP * 0.12), run_time=0.8)
+        self.wait(2)
