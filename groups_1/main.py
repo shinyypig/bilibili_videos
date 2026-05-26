@@ -1005,3 +1005,58 @@ class SubgroupPartitionTheorem(Scene):
         )
         self.play(Write(theorem), run_time=1.8)
         self.wait(2)
+
+
+class ReflectionContradiction(Scene):
+    def construct(self):
+        logo = Logo()
+        self.add(logo.to_edge(DR, buff=0.5))
+
+        title = Text("离散情形的反证", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
+        self.add(title)
+
+        subtitle = Text("假设两次反射仍然是反射", font_size=30)
+        subtitle.next_to(title, DOWN, buff=0.35, aligned_edge=LEFT)
+        self.play(Write(subtitle), run_time=1.8)
+
+        setup = VGroup(
+            MathTex(r"|D_n|=2n", font_size=46),
+            MathTex(r"A=\{R_0,F_0,F_1,\ldots,F_{n-1}\}", font_size=40),
+            MathTex(r"|A|=n+1", font_size=46, color=c2),
+        ).arrange(DOWN, buff=0.38)
+        setup.move_to(UP * 0.25)
+
+        self.play(Write(setup[0]), run_time=1.2)
+        self.play(Write(setup[1]), run_time=1.6)
+        self.play(Write(setup[2]), run_time=1.0)
+        self.wait(0.8)
+
+        subgroup_claim = VGroup(
+            Text("如果假设成立，A 就是子群", font_size=30),
+            MathTex(r"A\leq D_n", font_size=48, color=c2),
+        ).arrange(DOWN, buff=0.28)
+        subgroup_claim.move_to(DOWN * 1.65)
+
+        self.play(Write(subgroup_claim[0]), run_time=1.3)
+        self.play(Write(subgroup_claim[1]), run_time=1.0)
+        self.wait(0.8)
+
+        self.play(
+            FadeOut(setup),
+            FadeOut(subgroup_claim),
+            run_time=0.8,
+        )
+
+        contradiction = VGroup(
+            Text("子群的元素个数必须整除整个群", font_size=30),
+            Text("但 n+1 不能整除 2n", font_size=34, color=c5),
+            Text("矛盾", font_size=34, color=c5),
+            Text("所以：两次反射只能是旋转", font_size=32, color=c2),
+        ).arrange(DOWN, buff=0.34)
+        contradiction.move_to(DOWN * 0.25)
+
+        self.play(Write(contradiction[0]), run_time=1.2)
+        self.play(Write(contradiction[1]), run_time=1.1)
+        self.play(Write(contradiction[2]), run_time=0.8)
+        self.play(Write(contradiction[3]), run_time=1.4)
+        self.wait(2)
