@@ -145,8 +145,8 @@ class ProveInGeometry(Scene):
         plane = Axes(
             x_range=[-4, 4],
             y_range=[-4, 4],
-            x_length=5,
-            y_length=5,
+            x_length=4.7,
+            y_length=4.7,
             axis_config={
                 "include_tip": True,
                 "tip_width": 0.2,
@@ -155,7 +155,7 @@ class ProveInGeometry(Scene):
                 "include_numbers": False,  # 不显示数字
             },
         )
-        plane.to_edge(LEFT, buff=1)
+        plane.to_edge(LEFT, buff=0.7).shift(DOWN * 0.2)
 
         self.play(Create(plane))
 
@@ -282,28 +282,32 @@ class ProveInGeometry(Scene):
         )
 
         # show that beta = 2theta - alpha
+        proof_col_x = 3.35
         eq1 = MathTex(r"\alpha - \theta = \theta - \beta", font_size=48)
-
-        eq1.next_to(title, DOWN + RIGHT * 1.5, buff=0.5)
+        eq1.move_to([proof_col_x, 1.8, 0])
         self.play(Write(eq1), run_time=2)
 
         eq2 = MathTex(r"\beta = 2\theta - \alpha", font_size=48)
         eq2.next_to(eq1, DOWN, buff=0.5)
+        eq2.set_x(proof_col_x)
         self.play(TransformFromCopy(eq1, eq2), run_time=2)
 
         eq3 = MathTex(r"F_{\theta} (\alpha) = 2\theta - \alpha", font_size=48)
         eq3.next_to(eq2, DOWN, buff=0.5)
+        eq3.set_x(proof_col_x)
         self.play(Write(eq3), run_time=2)
 
         eq4 = MathTex(
             r"F_{\theta_2} \circ F_{\theta_1} (\alpha) = \alpha + 2(\theta_2 - \theta_1)",
-            font_size=48,
+            font_size=40,
         )
-        eq4.next_to(eq3, DOWN, buff=0.5)
+        eq4.next_to(eq3, DOWN, buff=0.55)
+        eq4.set_x(proof_col_x)
         self.play(Write(eq4), run_time=4)
 
         txt1 = Text("两次反射等于旋转", font_size=36)
-        txt1.next_to(eq4, DOWN, buff=0.5)
+        txt1.next_to(eq4, DOWN, buff=0.55)
+        txt1.set_x(proof_col_x)
         self.play(Write(txt1), run_time=2)
 
 
@@ -313,7 +317,9 @@ class Example(Scene):
         logo = Logo()
         self.add(logo.to_edge(DR, buff=0.5))
 
-        title = Text("几何证明", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
+        title = Text("几何证明-两次反射为旋转", font_size=48, color=WHITE).to_edge(
+            UL, buff=0.5
+        )
         self.play(Write(title))
 
         plane1 = Axes(
@@ -433,7 +439,7 @@ class IntroToGroups(Scene):
         logo = Logo()
         self.add(logo.to_edge(DR, buff=0.5))
 
-        title = Text("群论入门", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
+        title = Text("群论简介", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
         self.play(Write(title))
 
         # 给出群的定义（放在页面左侧）
@@ -875,7 +881,7 @@ class SubgroupPartitionTheorem(Scene):
         logo = Logo()
         self.add(logo.to_edge(DR, buff=0.5))
 
-        title = Text("子群分割定理", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
+        title = Text("拉格朗日定理", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
         self.add(title)
 
         subtitle = Text("用子群去“平移”，会把整个群分成不重叠的小块", font_size=30)
@@ -1012,30 +1018,212 @@ class ReflectionContradiction(Scene):
         logo = Logo()
         self.add(logo.to_edge(DR, buff=0.5))
 
-        title = Text("离散情形的反证", font_size=48, color=WHITE).to_edge(UL, buff=0.5)
+        title = Text("群论证明-两次反射为旋转", font_size=48, color=WHITE).to_edge(
+            UL, buff=0.5
+        )
         self.add(title)
 
-        subtitle = Text("假设两次反射仍然是反射", font_size=30)
+        subtitle = Text("先看离散情形：二面体群 Dn", font_size=30)
         subtitle.next_to(title, DOWN, buff=0.35, aligned_edge=LEFT)
         self.play(Write(subtitle), run_time=1.8)
 
-        setup = VGroup(
-            MathTex(r"|D_n|=2n", font_size=46),
-            MathTex(r"A=\{R_0,F_0,F_1,\ldots,F_{n-1}\}", font_size=40),
-            MathTex(r"|A|=n+1", font_size=46, color=c2),
-        ).arrange(DOWN, buff=0.38)
-        setup.move_to(UP * 0.25)
+        def element_card(tex, fill_color=BLUE_E, width=1.0):
+            box = RoundedRectangle(
+                width=width,
+                height=0.62,
+                corner_radius=0.07,
+                stroke_width=2,
+                stroke_color=WHITE,
+                fill_color=fill_color,
+                fill_opacity=0.32,
+            )
+            label = MathTex(tex, font_size=27)
+            label.move_to(box)
+            return VGroup(box, label)
 
-        self.play(Write(setup[0]), run_time=1.2)
-        self.play(Write(setup[1]), run_time=1.6)
-        self.play(Write(setup[2]), run_time=1.0)
+        rot_elems = [
+            r"R_0",
+            r"R_1",
+            r"R_2",
+            r"\cdots",
+            r"R_{n-1}",
+        ]
+        ref_elems = [
+            r"F_0",
+            r"F_1",
+            r"F_2",
+            r"\cdots",
+            r"F_{n-1}",
+        ]
+
+        rot_cards = VGroup(
+            *[element_card(tex, fill_color=BLUE_E) for tex in rot_elems]
+        ).arrange(RIGHT, buff=0.12)
+        ref_cards = VGroup(
+            *[element_card(tex, fill_color=PURPLE_E) for tex in ref_elems]
+        ).arrange(RIGHT, buff=0.12)
+
+        rot_label = Text("n 个旋转", font_size=27, color=c3)
+        ref_label = Text("n 个反射", font_size=27, color=c5)
+        rot_row = VGroup(rot_label, rot_cards).arrange(RIGHT, buff=0.32)
+        ref_row = VGroup(ref_label, ref_cards).arrange(RIGHT, buff=0.32)
+        dn_rows = VGroup(rot_row, ref_row).arrange(DOWN, buff=0.35, aligned_edge=LEFT)
+        dn_rows.move_to(UP * 0.6)
+
+        dn_size = MathTex(r"|D_n|=2n", font_size=38)
+        dn_size.next_to(dn_rows, DOWN, buff=0.28)
+
+        self.play(
+            LaggedStart(
+                FadeIn(rot_label, shift=RIGHT * 0.12),
+                LaggedStart(*[FadeIn(card) for card in rot_cards], lag_ratio=0.08),
+                lag_ratio=0.25,
+            ),
+            run_time=1.7,
+        )
+        self.play(
+            LaggedStart(
+                FadeIn(ref_label, shift=RIGHT * 0.12),
+                LaggedStart(*[FadeIn(card) for card in ref_cards], lag_ratio=0.08),
+                lag_ratio=0.25,
+            ),
+            run_time=1.7,
+        )
+        self.play(Write(dn_size), run_time=1.0)
         self.wait(0.8)
 
+        self.play(FadeOut(dn_size), run_time=0.45)
+
+        rot_box = SurroundingRectangle(
+            rot_cards,
+            color=c2,
+            buff=0.08,
+            corner_radius=0.08,
+            stroke_width=4,
+        )
+        rot_subgroup = VGroup(
+            Text("所有旋转构成子群", font_size=26),
+            MathTex(r"H=\{R_0,R_1,\ldots,R_{n-1}\}\leq D_n", font_size=33, color=c2),
+            MathTex(r"|H|=n", font_size=34, color=c2),
+        ).arrange(DOWN, buff=0.22)
+        rot_subgroup.move_to(DOWN * 1.45)
+
+        self.play(Create(rot_box), Write(rot_subgroup[0]), run_time=1.2)
+        self.play(Write(rot_subgroup[1]), Write(rot_subgroup[2]), run_time=1.7)
+        self.wait(0.7)
+
+        ref_box = SurroundingRectangle(
+            ref_cards,
+            color=c5,
+            buff=0.08,
+            corner_radius=0.08,
+            stroke_width=4,
+        )
+        coset_note = VGroup(
+            Text("剩下的 n 个反射，正好是 H 的一个陪集", font_size=26),
+            MathTex(r"F_iH=\{F_0,F_1,\ldots,F_{n-1}\}", font_size=33, color=c5),
+        ).arrange(DOWN, buff=0.22)
+        coset_note.move_to(DOWN * 1.45)
+
+        self.play(
+            FadeOut(rot_subgroup),
+            Transform(rot_box, ref_box),
+            run_time=0.9,
+        )
+        self.play(Write(coset_note[0]), run_time=1.2)
+        self.play(Write(coset_note[1]), run_time=1.4)
+        self.wait(0.8)
+
+        self.play(
+            FadeOut(dn_rows),
+            FadeOut(rot_box),
+            FadeOut(coset_note),
+            run_time=0.8,
+        )
+
+        coset_title = Text("再用一个反射去组合这个陪集", font_size=30)
+        coset_title.next_to(title, DOWN, buff=0.35, aligned_edge=LEFT)
+
+        chosen_ref = element_card(r"F_i", fill_color=PURPLE_E, width=1.05)
+        times = MathTex(r"\circ", font_size=42)
+        ref_set = VGroup(
+            element_card(r"F_0", fill_color=PURPLE_E),
+            element_card(r"F_1", fill_color=PURPLE_E),
+            element_card(r"\cdots", fill_color=PURPLE_E),
+            element_card(r"F_{n-1}", fill_color=PURPLE_E),
+        ).arrange(RIGHT, buff=0.12)
+        input_group = VGroup(chosen_ref, times, ref_set).arrange(RIGHT, buff=0.22)
+        input_group.scale(0.9)
+        input_group.move_to(UP * 1.15)
+
+        arrow = Arrow(
+            start=UP * 0.55,
+            end=DOWN * 0.1,
+            buff=0.12,
+            stroke_width=4,
+            color=WHITE,
+            max_tip_length_to_length_ratio=0.18,
+        )
+
+        rotation_output = VGroup(
+            Text("要么是旋转集合", font_size=23, color=c3),
+            MathTex(r"\{R_0,R_1,\ldots,R_{n-1}\}", font_size=31, color=c3),
+        ).arrange(DOWN, buff=0.18)
+
+        reflection_output = VGroup(
+            Text("要么是反射集合", font_size=23, color=c5),
+            MathTex(r"\{F_0,F_1,\ldots,F_{n-1}\}", font_size=31, color=c5),
+        ).arrange(DOWN, buff=0.18)
+
+        outputs = VGroup(rotation_output, reflection_output).arrange(
+            RIGHT, buff=0.55, aligned_edge=UP
+        )
+        outputs.move_to(DOWN * 0.72)
+        output_group = VGroup(arrow, outputs)
+
+        one_type = VGroup(
+            Text("因此：任意两次反射的组合，结果必须同属一类", font_size=25),
+            Text("不可能一部分是旋转，另一部分是反射", font_size=23, color=GREY_A),
+        ).arrange(DOWN, buff=0.2)
+        one_type.move_to(DOWN * 2.35)
+
+        self.play(Transform(subtitle, coset_title), run_time=0.7)
+        self.play(FadeIn(input_group, shift=UP * 0.1), run_time=1.5)
+        self.play(GrowArrow(arrow), run_time=0.8)
+        self.play(Write(rotation_output), run_time=1.4)
+        self.play(Write(reflection_output), run_time=1.4)
+        self.play(Write(one_type[0]), run_time=1.6)
+        self.play(Write(one_type[1]), run_time=1.2)
+        self.wait(1.0)
+
+        self.play(
+            FadeOut(input_group),
+            FadeOut(output_group),
+            FadeOut(one_type),
+            run_time=0.8,
+        )
+
+        final_subtitle = Text("最后排除“两次反射仍是反射”的可能", font_size=30)
+        final_subtitle.next_to(title, DOWN, buff=0.35, aligned_edge=LEFT)
+        self.play(Transform(subtitle, final_subtitle), run_time=0.7)
+
+        setup = VGroup(
+            Text("假设两次反射仍然是反射", font_size=30, color=c5),
+            MathTex(r"A=\{R_0,F_0,F_1,\ldots,F_{n-1}\}", font_size=40),
+            MathTex(r"|A|=n+1", font_size=46, color=c2),
+        ).arrange(DOWN, buff=0.36)
+        setup.move_to(UP * 0.35)
+
+        self.play(Write(setup[0]), run_time=1.1)
+        self.play(Write(setup[1]), run_time=1.5)
+        self.play(Write(setup[2]), run_time=1.0)
+        self.wait(0.6)
+
         subgroup_claim = VGroup(
-            Text("如果假设成立，A 就是子群", font_size=30),
+            Text("单位元加上所有反射，对组合封闭", font_size=30),
             MathTex(r"A\leq D_n", font_size=48, color=c2),
         ).arrange(DOWN, buff=0.28)
-        subgroup_claim.move_to(DOWN * 1.65)
+        subgroup_claim.move_to(DOWN * 1.45)
 
         self.play(Write(subgroup_claim[0]), run_time=1.3)
         self.play(Write(subgroup_claim[1]), run_time=1.0)
@@ -1049,7 +1237,7 @@ class ReflectionContradiction(Scene):
 
         contradiction = VGroup(
             Text("子群的元素个数必须整除整个群", font_size=30),
-            Text("但 n+1 不能整除 2n", font_size=34, color=c5),
+            MathTex(r"n+1\nmid 2n", font_size=48, color=c5),
             Text("矛盾", font_size=34, color=c5),
             Text("所以：两次反射只能是旋转", font_size=32, color=c2),
         ).arrange(DOWN, buff=0.34)
